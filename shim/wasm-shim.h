@@ -108,3 +108,18 @@ int rust_sqlite_wasm_getentropy(void *buffer, size_t len);
 [[noreturn]] void rust_sqlite_wasm_assert_fail(const char *expr,
                                                const char *file, int line,
                                                const char *func);
+
+// Private names for the musl internals and the printf of this shim: another libc linked in the
+// same module (e.g. rquickjs-sys's wasi-libc) defines the same symbols, with another ABI
+// (long double) and another FILE layout. The linker binds every caller to a single definition.
+#define __floatscan rust_sqlite_wasm___floatscan
+#define __shgetc rust_sqlite_wasm___shgetc
+#define __shlim rust_sqlite_wasm___shlim
+#define __toread rust_sqlite_wasm___toread
+#define __uflow rust_sqlite_wasm___uflow
+#define printf rust_sqlite_wasm_printf
+#define sprintf rust_sqlite_wasm_sprintf
+#define vsprintf rust_sqlite_wasm_vsprintf
+#define snprintf rust_sqlite_wasm_snprintf
+#define vsnprintf rust_sqlite_wasm_vsnprintf
+#define vprintf rust_sqlite_wasm_vprintf
